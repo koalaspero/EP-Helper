@@ -1,14 +1,18 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useState } from 'react';
 import { loginFields } from "../constants/formFields";
+import { useNavigate } from "react-router-dom";
 import FormAction from "./FormAction";
 import FormExtra from "./FormExtra";
 import Input from "./Input";
+
 
 const fields=loginFields;
 let fieldsState = {};
 fields.forEach(field=>fieldsState[field.id]='');
 
 export default function Login(){
+    const navigate = useNavigate();
     const [loginState,setLoginState]=useState(fieldsState);
 
     const handleChange=(e)=>{
@@ -24,6 +28,11 @@ export default function Login(){
     const authenticateUser = () =>{
 
     }
+
+    // Function to navigate to the Register Page
+    const navigateToRegister = () => {
+        navigate("signup"); 
+    };
 
     return (
         <form className="flex flex-col items-center mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -47,7 +56,13 @@ export default function Login(){
           <FormExtra
             text="¿No tienes una cuenta?, registrate aquí"
             />
-          <FormAction handleSubmit={handleSubmit} text="Registrat" />
+            <button
+                type="button"
+                className="group relative w-[10vw] rounded-[20px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-slate-400 hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-400 mt-10"
+                onClick={()=>navigateToRegister()}
+            >
+                <div class="text-center text-sky-950 ">Registrarse</div>
+            </button>
         </form>
       );
       

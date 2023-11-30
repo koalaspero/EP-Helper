@@ -23,6 +23,26 @@ const loginFields=[
 
 const signupFields=[
     {
+        labelText:"Nombre",
+        labelFor:"first-name",
+        id:"first-name",
+        name:"fname",
+        type:"text",
+        autoComplete:"name",
+        isRequired:true,
+        placeholder:"Nombre"   
+    },  
+    {
+        labelText:"Apellido",
+        labelFor:"last-name",
+        id:"last-name",
+        name:"lname",
+        type:"text",
+        autoComplete:"name",
+        isRequired:true,
+        placeholder:"Apellido"   
+    }, 
+    {
         labelText:"Username",
         labelFor:"username",
         id:"username",
@@ -30,18 +50,11 @@ const signupFields=[
         type:"text",
         autoComplete:"username",
         isRequired:true,
-        placeholder:"Username"   
+        placeholder:"Nombre de Usuario"   
     },
-    {
-        labelText:"Email address",
-        labelFor:"email-address",
-        id:"email-address",
-        name:"email",
-        type:"email",
-        autoComplete:"email",
-        isRequired:true,
-        placeholder:"Email address"   
-    },
+]
+
+const passwords = [
     {
         labelText:"Password",
         labelFor:"password",
@@ -64,4 +77,4 @@ const signupFields=[
     }
 ]
 
-export {loginFields,signupFields}
+export {loginFields,signupFields,passwords}
