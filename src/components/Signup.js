@@ -19,8 +19,9 @@ export default function Signup(){
 
   const handleSubmit=(e)=>{
     e.preventDefault();
+    signupState['password'] = passwordsState['password']
+    signupState['confirm-password'] = passwordsState['confirm-password']
     console.log(signupState)
-    console.log(passwordsState)
     createAccount()
   }
 
@@ -31,32 +32,14 @@ export default function Signup(){
 
     return(
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-        <div className="pl-20">
-        {
-                fields.map(field=>
-                        <Input
-                            key={field.id}
-                            handleChange={handleChange}
-                            value={signupState[field.id]}
-                            labelText={field.labelText}
-                            labelFor={field.labelFor}
-                            id={field.id}
-                            name={field.name}
-                            type={field.type}
-                            isRequired={field.isRequired}
-                            placeholder={field.placeholder}
-                    />
-                
-                )
-        }
-        </div>
-        <div>
+        <div className="flex justify-center">
+          <div className="pl-20">
           {
-                  passwordsFields.map(field=>
+                  fields.map(field=>
                           <Input
                               key={field.id}
-                              handleChange={handlePasswordChange}
-                              value={passwordsState[field.id]}
+                              handleChange={handleChange}
+                              value={signupState[field.id]}
                               labelText={field.labelText}
                               labelFor={field.labelFor}
                               id={field.id}
@@ -68,10 +51,31 @@ export default function Signup(){
                   
                   )
           }
+          </div>
+          <div className="pl-20">
+            {
+                    passwordsFields.map(field=>
+                            <Input
+                                key={field.id}
+                                handleChange={handlePasswordChange}
+                                value={passwordsState[field.id]}
+                                labelText={field.labelText}
+                                labelFor={field.labelFor}
+                                id={field.id}
+                                name={field.name}
+                                type={field.type}
+                                isRequired={field.isRequired}
+                                placeholder={field.placeholder}
+                        />
+                    
+                    )
+            }
+          </div>
+          
         </div>
-        <FormAction handleSubmit={handleSubmit} text="Signup" />
-         
-
+        <div className='flex justify-center'>
+          <FormAction handleSubmit={handleSubmit} text="Registro" />
+        </div>
       </form>
     )
 }
