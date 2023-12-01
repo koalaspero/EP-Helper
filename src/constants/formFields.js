@@ -63,7 +63,7 @@ const passwords = [
         type:"password",
         autoComplete:"current-password",
         isRequired:true,
-        placeholder:"Password"   
+        placeholder:"Contraseña"   
     },
     {
         labelText:"Confirm Password",
@@ -73,7 +73,7 @@ const passwords = [
         type:"password",
         autoComplete:"confirm-password",
         isRequired:true,
-        placeholder:"Confirm Password"   
+        placeholder:"Confirma Contraseña"   
     }
 ]
 
