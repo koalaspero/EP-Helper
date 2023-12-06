@@ -1,11 +1,15 @@
 import { CustomDragDrop } from "./CustomContainer";
 import { useState } from "react";
 
-export default function DragComponent() {
+export default function DragComponent({ onUploadStart }) {
   const [ownerLicense, setOwnerLicense] = useState([]);
 
   function uploadFiles(f) {
-    setOwnerLicense([...ownerLicense, ...f]);
+    // Simulate an asynchronous file upload process
+    setTimeout(() => {
+      // Set loading to false after the upload is complete
+      setOwnerLicense([...ownerLicense, ...f]);
+    }, 2000);
   }
 
   function deleteFile(indexImg) {
@@ -26,6 +30,7 @@ export default function DragComponent() {
         onDelete={deleteFile}
         count={1}
         formats={["csv"]}
+        onUploadStart={onUploadStart}
       />
     </div>
   );

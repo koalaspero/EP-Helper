@@ -9,7 +9,8 @@ export function CustomDragDrop({
   onUpload,
   onDelete,
   count,
-  formats
+  formats,
+  onUploadStart 
 }) {
   const dropContainer = useRef(null);
   const [dragging, setDragging] = useState(false);
@@ -156,7 +157,6 @@ export function CustomDragDrop({
 
   return (
     <>
-      {/* Container Drop */}
       <div
         className={`${
           dragging
@@ -201,7 +201,7 @@ export function CustomDragDrop({
               <div className="flex justify-between">
                 <div className="w-[70%] flex justify-start items-center space-x-2">
                   <div
-                    className="text-[#5E62FF] text-[37px] cursor-pointer"
+                    className="text-[#5E62FF] text-[37px] cursor-pointer"  
                     onClick={() => showImage(img.photo)}
                   >
                     {img.type.match(/image.*/i) ? (
@@ -227,9 +227,9 @@ export function CustomDragDrop({
                     >
                       <BsX className="ml-auto" />
                     </div>
-                    <div className="text-[10px] font-medium text-gray-400">
+                    {/* <div className="text-[10px] font-medium text-gray-400">
                       Done
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
@@ -237,6 +237,17 @@ export function CustomDragDrop({
           ))}
         </div>
       )}
+      <div className='flex justify-center mt-10'>
+          <button
+            id='subir'
+            type='button'
+            className='group relative w-[10vw] rounded-[20px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-slate-400 hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-400'
+            onClick={onUploadStart} // Call onUploadStart when the button is clicked
+          >
+            <div className='text-center text-sky-950 '>Subir</div>
+          </button>
+      </div>
     </>
+    
   );
 }
