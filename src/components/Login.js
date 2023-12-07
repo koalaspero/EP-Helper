@@ -2,10 +2,10 @@
 import { useState } from 'react';
 import { loginFields } from "../constants/formFields";
 import { useNavigate } from "react-router-dom";
+import { apiBasUrl } from '../constants/formFields';
 import FormAction from "./FormAction";
 import FormExtra from "./FormExtra";
 import Input from "./Input";
-
 
 const fields=loginFields;
 let fieldsState = {};
@@ -25,9 +25,39 @@ export default function Login(){
     }
 
     //Handle Login API Integration here
-    const authenticateUser = () =>{
-
-    }
+    const authenticateUser = async () => {
+      try {
+          const response = await fetch(apiBasUrl + 'auth/login', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                  username: loginState.username,
+                  password: loginState.password,
+              }),
+          });
+    
+          if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+    
+          const responseData = await response.json();
+          console.log(responseData);
+    
+          // Handle the response data as needed
+    
+          // For example, you might want to store an access token
+          // const accessToken = responseData.access_token;
+          
+          // Navigate to another page upon successful login
+          // For example, redirect to the dashboard page
+          // navigate("/home");
+      } catch (error) {
+          console.error('Error during login:', error.message);
+          // Handle login failure, display an error message, etc.
+      }
+    };
 
     // Function to navigate to the Register Page
     const navigateToRegister = () => {

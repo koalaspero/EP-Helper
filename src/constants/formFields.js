@@ -1,13 +1,13 @@
 const loginFields=[
     {
-        labelText:"Nombre de usuario",
-        labelFor:"email-address",
-        id:"email-address",
-        name:"email",
-        type:"email",
-        autoComplete:"email",
+        labelText:"Username",
+        labelFor:"username",
+        id:"username",
+        name:"username",
+        type:"text",
+        autoComplete:"username",
         isRequired:true,
-        placeholder:"Ingrese su usuario"   
+        placeholder:"Nombre de Usuario"   
     },
     {
         labelText:"Contraseña",
@@ -77,4 +77,6 @@ const passwords = [
     }
 ]
 
-export {loginFields,signupFields,passwords}
+const apiBasUrl = "http://localhost:8000/"
+
+export {loginFields,signupFields,passwords, apiBasUrl}
