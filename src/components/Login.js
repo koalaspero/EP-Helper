@@ -39,6 +39,7 @@ export default function Login(){
               body: JSON.stringify({
                   username: loginState.username,
                   password: loginState.password,
+                  role: 2
               }),
           });
           if (!response.ok) {
