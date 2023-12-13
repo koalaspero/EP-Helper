@@ -27,7 +27,7 @@ export default function Login(){
     //Handle Login API Integration here
     const authenticateUser = async () => {
       try {
-          const response = await fetch(apiBasUrl + 'auth/login', {
+          const response = await fetch(apiBasUrl + 'token', {
               method: 'POST',
               headers: {
                   'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ export default function Login(){
           }
     
           const responseData = await response.json();
-          console.log(responseData);
+          console.log(responseData['id']);
     
           // Handle the response data as needed
     
