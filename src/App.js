@@ -12,7 +12,7 @@ import AdminPrincipalPage from "./pages/AdminPrincipal";
 import UsuariosAdmin from "./pages/UsuariosAdmin";
 function App() {
   return (
-    <div className="min-h-full h-screen flex justify-center bg-fondo">
+    <div className="h-full h-screen flex justify-center bg-fondo">
       <div className="max-w-full w-full space-y-8">
         <BrowserRouter>
           <Routes>

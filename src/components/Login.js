@@ -35,6 +35,7 @@ export default function Login(){
               body: JSON.stringify({
                   username: loginState.username,
                   password: loginState.password,
+                  role: 2
               }),
           });
     
@@ -43,16 +44,12 @@ export default function Login(){
           }
     
           const responseData = await response.json();
-          console.log(responseData['id']);
+          console.log(responseData);
     
           // Handle the response data as needed
     
-          // For example, you might want to store an access token
-          // const accessToken = responseData.access_token;
-          
-          // Navigate to another page upon successful login
-          // For example, redirect to the dashboard page
-          // navigate("/home");
+          navigate("/home");
+
       } catch (error) {
           console.error('Error during login:', error.message);
           // Handle login failure, display an error message, etc.
