@@ -12,6 +12,7 @@ export function CustomDragDrop({
   formats,
   onUploadStart 
 }) {
+  const [buttonPressed, setButtonPressed] = useState(true);
   const dropContainer = useRef(null);
   const [dragging, setDragging] = useState(false);
   const fileRef = useRef(null);
@@ -80,7 +81,7 @@ export function CustomDragDrop({
         onUpload(newFiles);
         TopNotification.fire({
           icon: "success",
-          title: "Archivo subido"
+          title: "Archivo agregado"
         });
       });
     }
@@ -223,7 +224,9 @@ export function CustomDragDrop({
                   <div className="space-y-1">
                     <div
                       className="text-gray-500 text-[17px] cursor-pointer"
-                      onClick={() => onDelete(index)}
+                      onClick={() => {
+                        onDelete(index)
+                      }}
                     >
                       <BsX className="ml-auto" />
                     </div>
@@ -238,14 +241,15 @@ export function CustomDragDrop({
         </div>
       )}
       <div className='flex justify-center mt-10'>
-          <button
-            id='subir'
-            type='button'
-            className='group relative w-[10vw] rounded-[20px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-slate-400 hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-400'
-            onClick={onUploadStart} // Call onUploadStart when the button is clicked
-          >
-            <div className='text-center text-sky-950 '>Subir</div>
-          </button>
+        <button
+          id='subir'
+          type='button'
+          className='bg-blue-500 text-white px-4 py-2 rounded-md bg-slate-400 hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-400'
+          onClick={onUploadStart} // Call onUploadStart when the button is clicked
+          disabled={ownerLicense.length !== 1} // Disable the button if the count is not 1
+        >
+          <div className='text-center text-sky-950 '>Generar resultados</div>
+        </button>
       </div>
     </>
     

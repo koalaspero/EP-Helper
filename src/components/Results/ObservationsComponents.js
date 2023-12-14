@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
+import { FaCaretDown, FaCaretUp } from 'react-icons/fa'; // Import the icons
+import { apiBasUrl } from '../../constants/formFields';
 
-const ObservationsComponent = () => {
+const ObservationsComponent = (props) => {
+  const { result } = props;
   const [observation, setObservation] = useState('');
   const [observationsList, setObservationsList] = useState([]);
+  const [selectedObservation, setSelectedObservation] = useState(null);
+  const [isObservationsCollapsed, setIsObservationsCollapsed] = useState(false);
 
   const handleChange = (e) => {
     // Limit the input to 500 characters
@@ -19,45 +24,218 @@ const ObservationsComponent = () => {
     }
   };
 
+  // const handleSelectObservation = (index) => {
+  //   // Set the selected observation based on index
+  //   setSelectedObservation(index);
+  // };
+
+  const handleToggleObservations = () => {
+    setIsObservationsCollapsed(!isObservationsCollapsed);
+  };
+
+  const postObservations = async (obsData) => {
+    try {
+      const response = await fetch(apiBasUrl +'meds', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(obsData),
+      });
+  
+      if (!response.ok) {
+        // Handle the error here
+        console.error('Error:', response.status, response.statusText);
+        return;
+      }
+  
+      const res = await response.json();
+      console.log('Result:', res);
+
+      // Handle the successful response here
+    } catch (error) {
+      console.error('Error:', error.message);
+      // Handle the error here
+    }
+  }
+
+  const postResult = async (resultData) => {
+    try {
+      const response = await fetch(apiBasUrl +'results', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(resultData),
+      });
+  
+      if (!response.ok) {
+        // Handle the error here
+        console.error('Error:', response.status, response.statusText);
+        return;
+      }
+  
+      const result = await response.json();
+      console.log('Result:', result);
+
+      if(observationsList.length > 0){
+        for (let i = 0; i < observationsList.length; i++) {
+
+          let obsData = {
+            observationText: observationsList[i],
+            result: String(result['id'])
+          }
+
+          await postObservations(obsData)
+
+        }
+      }
+    } catch (error) {
+      console.error('Error:', error.message);
+      // Handle the error here
+    }
+  };
+
+  const saveResultsToFile = async () => {
+    // Format the results and observations
+    const formattedObservations = observationsList
+      .map((obs) => {
+        // Add a newline every 50 characters and a blank line before each observation
+        const lines = [];
+        const words = obs.split(' ');
+        let currentLine = '';
+        for (const word of words) {
+          if (currentLine.length + word.length + 1 <= 50) {
+            // Add word to the current line
+            currentLine += (currentLine.length > 0 ? ' ' : '') + word;
+          } else {
+            // Start a new line
+            lines.push(currentLine);
+            currentLine = word;
+          }
+        }
+        lines.push(currentLine);
+        return lines.join('\n') + '\n\n';
+      })
+      .join('');
+  
+    const formattedResults = `Resultados:\n${result}\n\nObservaciones:\n${formattedObservations}`;
+  
+    // Create a Blob with the formatted content
+    const blob = new Blob([formattedResults], { type: 'text/plain' });
+  
+    // Read the binary content of the Blob
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      // Now 'reader.result' contains the binary content of the file
+      const binaryContent = new Uint8Array(reader.result);
+
+      const today = new Date();
+      const formattedDate = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+
+      const resultData = {
+        fecha: formattedDate, // Replace with the actual date
+        hasParkinson: true, // Replace with the actual value
+        resultext: formattedResults, // Replace with the actual text
+        result: binaryContent, // Replace with the actual result
+        probability: 0.85, // Replace with the actual probability
+        doctor: "7" // Replace with the actual doctor's name
+      };   
+      
+      await postResult(resultData)     
+    };
+  
+    // Read the Blob as an ArrayBuffer
+    reader.readAsArrayBuffer(blob);
+
+    // Create a download link and trigger the download
+    // const downloadLink = document.createElement('a');
+    // downloadLink.href = URL.createObjectURL(blob);
+    // downloadLink.download = 'results_and_observations.txt';
+    // downloadLink.click();
+  };
+  
+
   return (
-    <div className="bg-white shadow rounded-lg w-full px-5 pt-3 pb-5 mt-4">
+    <div className="bg-white shadow rounded-lg w-full pt-3 pb-5 mt-4">
       <div className="pb-2 border-b border-[#e0e0e0]">
-        <h2 className="text-black text-[17px] font-semibold">Observations</h2>
-      </div>
-      <div className="flex items-center justify-center h-40 border-dashed border-[#e0e0e0] my-4">
-        <div className="cursor-pointer group">
-          <div className="text-[3rem] text-gray-400 group-hover:text-gray-600 transition duration-300">
-            +
-          </div>
+        <div className="flex items-center justify-between">
+          <h2 className="text-black text-[17px] font-semibold">Observaciones</h2>
+          <button
+            className="text-gray-500 hover:text-gray-700 focus:outline-none flex items-center"
+            onClick={handleToggleObservations}
+          >
+            {isObservationsCollapsed ? <FaCaretDown /> : <FaCaretUp />}
+            <span className="ml-2">{isObservationsCollapsed ? 'Expandir' : 'Retraer'}</span>
+          </button>
         </div>
       </div>
-      <div className="mt-4">
-        <textarea
-          className="w-full p-2 border border-[#e0e0e0] rounded-md resize-none"
-          placeholder="Write your observation (max 500 characters)"
-          value={observation}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="mt-4">
+      {!isObservationsCollapsed && (
+        <>
+          <div className="mt-4">
+            <textarea
+              className="w-full p-2 border border-[#e0e0e0] rounded-md resize-none"
+              placeholder="Escribe una observación (500 caracteres máximo)"
+              value={observation}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="flex justify-center mt-4">
+            <button
+              className="bg-blue-500 text-white px-4 py-2 rounded-md bg-slate-400 hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-400"
+              onClick={handleAddObservation}
+            >
+              <div className='text-sky-950'>
+                Agregar Observación
+              </div>
+            </button>
+          </div>
+          <div className="mt-4">
+            <label className="text-gray-600">Seleccionar observación:</label>
+            <select
+              className="block w-full p-2 border border-[#e0e0e0] rounded-md mt-2" // Adjust the width as needed
+              onChange={(e) => setSelectedObservation(parseInt(e.target.value, 10))}
+              value={selectedObservation !== null ? selectedObservation : ''}
+            >
+              <option value="" disabled>
+                Seleccionar observación
+              </option>
+              {observationsList.map((obs, index) => (
+                <option key={index} value={index}>
+                  {obs}
+                </option>
+              ))}
+            </select>
+          </div>
+          {selectedObservation !== null && (
+            <div className="mt-4">
+              <h3 className="text-gray-600 mb-2">Observación seleccionada:</h3>
+              <div className="border p-2 border-[#e0e0e0] rounded-md">
+                {observationsList[selectedObservation]}
+              </div>
+            </div>
+          )}
+        </>
+      )}
+      <div className="mt-4 flex justify-center">
         <button
-          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"
-          onClick={handleAddObservation}
+          className="bg-blue-500 text-white px-4 py-2 rounded-md bg-slate-400 hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-400"
+          onClick={saveResultsToFile}
         >
-          Add Observation
+          <div className='text-sky-950'>
+            Registrar resultados
+          </div>
         </button>
-      </div>
-      <div className="mt-4">
-        <ul>
-          {observationsList.map((obs, index) => (
-            <li key={index} className="mb-2">
-              {obs}
-            </li>
-          ))}
-        </ul>
       </div>
     </div>
   );
 };
 
 export default ObservationsComponent;
+
+
+
+
+
+
+
