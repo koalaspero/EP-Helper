@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FaCaretDown, FaCaretUp } from 'react-icons/fa'; // Import the icons
+import { apiBasUrl } from '../../constants/formFields';
 
 const ObservationsComponent = (props) => {
   const { result } = props;
@@ -23,16 +24,79 @@ const ObservationsComponent = (props) => {
     }
   };
 
-  const handleSelectObservation = (index) => {
-    // Set the selected observation based on index
-    setSelectedObservation(index);
-  };
+  // const handleSelectObservation = (index) => {
+  //   // Set the selected observation based on index
+  //   setSelectedObservation(index);
+  // };
 
   const handleToggleObservations = () => {
     setIsObservationsCollapsed(!isObservationsCollapsed);
   };
 
-  const saveResultsToFile = () => {
+  const postObservations = async (obsData) => {
+    try {
+      const response = await fetch(apiBasUrl +'meds', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(obsData),
+      });
+  
+      if (!response.ok) {
+        // Handle the error here
+        console.error('Error:', response.status, response.statusText);
+        return;
+      }
+  
+      const res = await response.json();
+      console.log('Result:', res);
+
+      // Handle the successful response here
+    } catch (error) {
+      console.error('Error:', error.message);
+      // Handle the error here
+    }
+  }
+
+  const postResult = async (resultData) => {
+    try {
+      const response = await fetch(apiBasUrl +'results', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(resultData),
+      });
+  
+      if (!response.ok) {
+        // Handle the error here
+        console.error('Error:', response.status, response.statusText);
+        return;
+      }
+  
+      const result = await response.json();
+      console.log('Result:', result);
+
+      if(observationsList.length > 0){
+        for (let i = 0; i < observationsList.length; i++) {
+
+          let obsData = {
+            observationText: observationsList[i],
+            result: String(result['id'])
+          }
+
+          await postObservations(obsData)
+
+        }
+      }
+    } catch (error) {
+      console.error('Error:', error.message);
+      // Handle the error here
+    }
+  };
+
+  const saveResultsToFile = async () => {
     // Format the results and observations
     const formattedObservations = observationsList
       .map((obs) => {
@@ -54,18 +118,43 @@ const ObservationsComponent = (props) => {
         return lines.join('\n') + '\n\n';
       })
       .join('');
-
+  
     const formattedResults = `Resultados:\n${result}\n\nObservaciones:\n${formattedObservations}`;
-
+  
     // Create a Blob with the formatted content
     const blob = new Blob([formattedResults], { type: 'text/plain' });
+  
+    // Read the binary content of the Blob
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      // Now 'reader.result' contains the binary content of the file
+      const binaryContent = new Uint8Array(reader.result);
+
+      const today = new Date();
+      const formattedDate = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+
+      const resultData = {
+        fecha: formattedDate, // Replace with the actual date
+        hasParkinson: true, // Replace with the actual value
+        resultext: formattedResults, // Replace with the actual text
+        result: binaryContent, // Replace with the actual result
+        probability: 0.85, // Replace with the actual probability
+        doctor: "7" // Replace with the actual doctor's name
+      };   
+      
+      await postResult(resultData)     
+    };
+  
+    // Read the Blob as an ArrayBuffer
+    reader.readAsArrayBuffer(blob);
 
     // Create a download link and trigger the download
-    const downloadLink = document.createElement('a');
-    downloadLink.href = URL.createObjectURL(blob);
-    downloadLink.download = 'results_and_observations.txt';
-    downloadLink.click();
+    // const downloadLink = document.createElement('a');
+    // downloadLink.href = URL.createObjectURL(blob);
+    // downloadLink.download = 'results_and_observations.txt';
+    // downloadLink.click();
   };
+  
 
   return (
     <div className="bg-white shadow rounded-lg w-full pt-3 pb-5 mt-4">
