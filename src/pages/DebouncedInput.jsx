@@ -14,7 +14,6 @@ const DebouncedInput = ({
   // *  0.5s after set value in state
   useEffect(() => {
     const timeout = setTimeout(() => {
-      console.log("debounced", value);
       onChange(value);
     }, debounce);
     return () => clearTimeout(timeout);

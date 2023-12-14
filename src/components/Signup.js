@@ -21,13 +21,12 @@ export default function Signup(){
     e.preventDefault();
     signupState['password'] = passwordsState['password']
     signupState['confirm-password'] = passwordsState['confirm-password']
-    console.log(signupState)
     createAccount()
   }
 
   //handle Signup API Integration here
   const createAccount=()=>{
-
+    
   }
 
     return(

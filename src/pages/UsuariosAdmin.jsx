@@ -11,155 +11,51 @@ import { useEffect, useMemo, useState } from "react";
 import Header from "../components/Header";
 import { SearchIcon } from "../icons/Icons";
 import DebouncedInput from "./DebouncedInput";
-import {
-  Card,
-  CardHeader,
-  Typography,
-  Button,
-  CardBody,
-  Chip,
-  CardFooter,
-  Avatar,
-  IconButton,
-  Tooltip,
-  Input,
-} from "@material-tailwind/react";
 import AddUser from "./Add";
-const data_fake = [
-  {
-    "username": "jsx1234",
-    "nombre": "Juan",
-    "apellido": "Perez",
-    "rol": "Administrador"
-  },
-  {
-    "username":"jsx1235",
-    "nombre": "Pedro",
-    "apellido": "Perez",
-    "rol": "Administrador"
-  },
-  {
-    "username": "jsx1236",
-    "nombre": "Maria",
-    "apellido": "Perez",
-    "rol": "Administrador"
-  },{
-    "username": "jsx1237",
-    "nombre": "Jose",
-    "apellido": "Perez",
-    "rol": "Administrador"
-  },
-  {
-    "username": "jsx1238",
-    "nombre": "Juan",
-    "apellido": "Perez",
-    "rol": "Administrador"
-  },
-  {
-    "username": "jsx1239",
-    "nombre": "Pedro",
-    "apellido": "Perez",
-    "rol": "Administrador"
-  },
-  {
-    "username": "jsx1240",
-    "nombre": "Maria",
-    "apellido": "Perez",
-    "rol": "Administrador"
-  },{
-    "username": "jsx1241",
-    "nombre": "Jose",
-    "apellido": "Perez",
-    "rol": "Administrador"
-  },
-  {
-    "username": "jsx1242",
-    "nombre": "Juan",
-    "apellido": "Perez",
-    "rol": "Administrador"
-  },
-  {
-    "username": "jsx1243",
-    "nombre": "Pedro",
-    "apellido": "Perez",
-    "rol": "Administrador"
-  },
-  {
-    "username": "jsx1244",
-    "nombre": "Maria",
-    "apellido": "Perez",
-    "rol": "Administrador"
-  },{
-    "username": "jsx1245",
-    "nombre": "Jose",
-    "apellido": "Perez",
-    "rol": "Administrador"
-  },
-  {
-    "username": "jsx1246",
-    "nombre": "Juan",
-    "apellido": "Perez",
-    "rol": "Administrador"
-  },
-  {
-    "username": "jsx1247",
-    "nombre": "Pedro",
-    "apellido": "Perez",
-    "rol": "Administrador"
-  },
-  {
-    "username": "jsx1248",
-    "nombre": "Maria",
-    "apellido": "Perez",
-    "rol": "Administrador"
-  },{
-    "username": "jsx1249",
-    "nombre": "Jose",
-    "apellido": "Perez",
-    "rol": "Administrador"
-  },
-  {
-    "username": "jsx1250",
-    "nombre": "Juan",
-    "apellido": "Perez",
-    "rol": "Administrador"
-  },
-  {
-    "username": "jsx1251",
-    "nombre": "Pedro",
-    "apellido": "Perez",
-    "rol": "Administrador"
-  },
-  {
-    "username": "jsx1252",
-    "nombre": "Maria",
-    "apellido": "Perez",
-    "rol": "Administrador"
-  }
-]
+import { apiBasUrl } from '../constants/formFields';
+import UserRegistrationModal from "./UserRegistrationModal";
 const UsuariosAdmin = () => {
   const [data, setData] = useState([]);
+  const [rowSelected, setRowSelected] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+   const handleShowModal = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
   const columnHelper= createColumnHelper();
     const columns = [
     columnHelper.accessor("username", {
       cell: (info) => <span>{info.getValue()}</span>,
       header: "Username",
     }),
-    columnHelper.accessor("nombre", {
+    columnHelper.accessor("name", {
       cell: (info) => <span>{info.getValue()}</span>,
       header: "Nombre",
     }),
-    columnHelper.accessor("apellido", {
+    columnHelper.accessor("last_name", {
       cell: (info) => <span>{info.getValue()}</span>,
       header: "Apellido",
     }),
-    columnHelper.accessor("rol", {
-      cell: (info) => <span>{info.getValue()}</span>,
+    columnHelper.accessor("role", {
+      cell: (info) => <span>{info.getValue()===1 ? "Administrador" : "Doctor"}</span>,
       header: "Rol",
     }),
   ];
+  const fetchUsers = async () => {
+    const respone = await fetch(apiBasUrl + "users", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await respone.json();
+    setData(data.data);
+  };
   useEffect(() => {
-    setData(data_fake);
+    fetchUsers();
   }, []);
   const [globalFilter, setGlobalFilter] = useState("");
   const table = useReactTable({
@@ -172,6 +68,11 @@ const UsuariosAdmin = () => {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
+  const editUser = (row) => {
+    row.original.rol = row.original.role == 1 ? "Admin" : "Doctor";
+    setRowSelected(row.original);
+    handleShowModal();
+  }
   return (
     <>
       <Header
@@ -224,7 +125,7 @@ const UsuariosAdmin = () => {
                     <td className="text-center py-2 border  border-slate-300" >
                       <div class='has-tooltip'>
                         <span class='tooltip rounded shadow-lg p-1 text-gray-100 bg-gray-800 -mt-9 -ml-12'>Editar Usuario</span>
-                        <PencilIcon className="h-4 w-4 block mx-auto cursor-pointer" />
+                        <PencilIcon onClick={() => editUser(row)} className="h-5 w-5 text-gray-500 hover:text-gray-700 cursor-pointer" />
                       </div>
                     </td>
                   </tr>
@@ -293,6 +194,7 @@ const UsuariosAdmin = () => {
             </select>
           </div>
         </div>
+        <UserRegistrationModal show={showModal} onClose={handleCloseModal} row={rowSelected}/>
     </>
   );
 };
