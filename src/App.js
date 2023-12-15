@@ -26,6 +26,7 @@ function AppContent() {
     setAdmin(isAdmin());
   }, [location.pathname]);
 
+  
   return (
     <div className="h-full h-screen flex justify-center bg-fondo">
       <div className="max-w-full w-full space-y-8">
