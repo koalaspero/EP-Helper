@@ -1,7 +1,19 @@
+import { deleteToken } from "../utilites/handleToken";
+import { useNavigate } from "react-router-dom";
+
 export default function Header({
   heading,
   isHome = false  // Optional parameter with a default value of false
 }) {
+  const navigate = useNavigate();
+
+  // Function to handle logout (replace it with your actual logout logic)
+  function handleLogout() {
+    // Add your logout logic here
+    console.log('Logout logic goes here');
+    deleteToken();
+    navigate('/');
+  }
   return (
     <div className={`w-full bg-principal shadow ${isHome ? 'mb-10' : 'mb-5'}`}>
       {!isHome && (
@@ -21,10 +33,5 @@ export default function Header({
       )}
     </div>
   );
-}
-// Function to handle logout (replace it with your actual logout logic)
-function handleLogout() {
-  // Add your logout logic here
-  console.log('Logout logic goes here');
 }
 

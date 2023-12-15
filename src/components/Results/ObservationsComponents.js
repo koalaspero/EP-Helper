@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { FaCaretDown, FaCaretUp } from 'react-icons/fa'; // Import the icons
 import { apiBasUrl } from '../../constants/formFields';
+import {getIdFromToken} from '../../utilites/handleToken'
+import Swal from 'sweetalert2';
 
 const ObservationsComponent = (props) => {
   const { result } = props;
@@ -24,10 +26,6 @@ const ObservationsComponent = (props) => {
     }
   };
 
-  // const handleSelectObservation = (index) => {
-  //   // Set the selected observation based on index
-  //   setSelectedObservation(index);
-  // };
 
   const handleToggleObservations = () => {
     setIsObservationsCollapsed(!isObservationsCollapsed);
@@ -90,6 +88,11 @@ const ObservationsComponent = (props) => {
 
         }
       }
+      Swal.fire({
+        icon: 'success',
+        title: 'Éxito',
+        text: 'Resultados y observaciones registradas',
+      })
     } catch (error) {
       console.error('Error:', error.message);
       // Handle the error here
@@ -131,7 +134,9 @@ const ObservationsComponent = (props) => {
       const binaryContent = new Uint8Array(reader.result);
 
       const today = new Date();
-      const formattedDate = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+      const formattedDate = today.toISOString().split('T')[0]; // Format as YYYY-MM-D
+
+      const doctorId = getIdFromToken()
 
       const resultData = {
         fecha: formattedDate, // Replace with the actual date
@@ -139,7 +144,7 @@ const ObservationsComponent = (props) => {
         resultext: formattedResults, // Replace with the actual text
         result: binaryContent, // Replace with the actual result
         probability: 0.85, // Replace with the actual probability
-        doctor: "7" // Replace with the actual doctor's name
+        doctor: doctorId // Replace with the actual doctor's name
       };   
       
       await postResult(resultData)     

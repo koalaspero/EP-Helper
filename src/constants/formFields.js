@@ -25,7 +25,7 @@ const signupFields=[
     {
         labelText:"Nombre",
         labelFor:"first-name",
-        id:"first-name",
+        id:"name",
         name:"fname",
         type:"text",
         autoComplete:"name",
