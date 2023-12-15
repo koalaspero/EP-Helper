@@ -39,7 +39,6 @@ export default function Login(){
               body: JSON.stringify({
                   username: loginState.username,
                   password: loginState.password,
-                  role: 2
               }),
           });
           if (!response.ok) {
@@ -50,7 +49,7 @@ export default function Login(){
               icon: 'success',
               title: 'Bienvenido',
               text: 'Iniciando sesión...',
-          }).then(async (result) => {
+          }).then(async () => {
             const responseData = await response.json();
             // Save the access token to the local storage
             saveToken(responseData.access_token);
@@ -62,7 +61,7 @@ export default function Login(){
             }
           });
       } catch (error) {
-        if (error.message=="Unauthorized") {
+        if (error.message === "Unauthorized") {
           Swal.fire({
               icon: 'error',
               title: 'Oops...',
