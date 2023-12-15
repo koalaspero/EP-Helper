@@ -6,6 +6,9 @@ import { apiBasUrl } from '../constants/formFields';
 import FormAction from "./FormAction";
 import FormExtra from "./FormExtra";
 import Input from "./Input";
+import { getRoleFromToken } from '../utilites/handleToken';
+import { saveToken } from "../utilites/handleToken";
+import Swal from 'sweetalert2';
 
 const fields=loginFields;
 let fieldsState = {};
@@ -14,6 +17,7 @@ fields.forEach(field=>fieldsState[field.id]='');
 export default function Login(){
     const navigate = useNavigate();
     const [loginState,setLoginState]=useState(fieldsState);
+
 
     const handleChange=(e)=>{
         setLoginState({...loginState,[e.target.id]:e.target.value})
@@ -38,21 +42,40 @@ export default function Login(){
                   role: 2
               }),
           });
-    
           if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
+              throw new Error(response.statusText);
           }
-    
-          const responseData = await response.json();
-          console.log(responseData);
-    
-          // Handle the response data as needed
-    
-          navigate("/home");
 
+          Swal.fire({
+              icon: 'success',
+              title: 'Bienvenido',
+              text: 'Iniciando sesión...',
+          }).then(async (result) => {
+            const responseData = await response.json();
+            // Save the access token to the local storage
+            saveToken(responseData.access_token);
+            let rol = getRoleFromToken(responseData.access_token);
+            if (rol === 1) {
+              navigate("/admin");
+            }else{
+              navigate("/home");
+            }
+          });
       } catch (error) {
-          console.error('Error during login:', error.message);
-          // Handle login failure, display an error message, etc.
+        if (error.message=="Unauthorized") {
+          Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Usuario o contraseña incorrectos',
+          });
+          console.error(error.message.status);
+        }else{
+          Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Algo salio mal',
+          });
+        }
       }
     };
 
@@ -62,7 +85,11 @@ export default function Login(){
     };
 
     return (
-        <form className="flex flex-col items-center mt-8 space-y-6" onSubmit={handleSubmit}>
+      <>
+        <form
+          className="flex flex-col items-center mt-8 space-y-6"
+          onSubmit={handleSubmit}
+        >
           <div className="-space-y-px w-full max-w-md">
             {fields.map((field) => (
               <Input
@@ -80,17 +107,16 @@ export default function Login(){
             ))}
           </div>
           <FormAction handleSubmit={handleSubmit} text="Inicia Sesión" />
-          <FormExtra
-            text="¿No tienes una cuenta?, registrate aquí"
-            />
-            <button
-                type="button"
-                className="group relative w-[10vw] rounded-[20px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-slate-400 hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-400 mt-10"
-                onClick={()=>navigateToRegister()}
-            >
-                <div class="text-center text-sky-950 ">Registrarse</div>
-            </button>
+          <FormExtra text="¿No tienes una cuenta?, registrate aquí" />
+          <button
+            type="button"
+            className="group relative w-[10vw] rounded-[20px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-slate-400 hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-400 mt-10"
+            onClick={() => navigateToRegister()}
+          >
+            <div class="text-center text-sky-950 ">Registrarse</div>
+          </button>
         </form>
-      );
+      </>
+    );
       
 }
