@@ -28,9 +28,9 @@ export default function AdminPrincipalPage() {
             <img src={assets2} alt="" className="admin_image mt-7" />
             <p className="font-bold text-xl pt-6">Usuarios</p>
           </div>
-          <div className="flex flex-col items-center rounded-lg bg-principal cursor-pointer option_navbar transform transition duration-1000 hover:scale-110">
+          <div className="flex flex-col items-center rounded-lg bg-principal cursor-pointer option_navbar transform transition duration-1000 hover:scale-110" onClick={handleOnClickDiagnosis}>
             <img src={assets1} alt="" className="admin_image mt-7" />
-            <p className="font-bold text-xl pt-6">Diagnóstico</p>
+            <p className="font-bold text-xl pt-6">Resultados</p>
           </div>
         </div>
       </div>
