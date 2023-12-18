@@ -68,6 +68,7 @@ export function CustomDragDrop({
 
     if (files && files.length) {
       const nFiles = files.map(async (file) => {
+        console.log(file)
         const base64String = await convertFileBase64(file);
         return {
           name: file.name,
