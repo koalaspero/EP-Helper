@@ -8,6 +8,7 @@ import AdminPrincipalPage from "./pages/AdminPrincipal";
 import UsuariosAdmin from "./pages/UsuariosAdmin";
 import { isDoctor, isAdmin } from './utilites/handleToken';
 import { useEffect, useState } from 'react';
+import DiagnosisAdmin from './pages/DiagnosisAdmin';
 function App() {
   return (
     <BrowserRouter>
@@ -29,7 +30,7 @@ function AppContent() {
   
   return (
     <div className="h-full h-screen flex justify-center bg-fondo">
-      <div className="max-w-full w-full space-y-8">
+      <div className="max-w-full w-full ">
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="signup" element={<SignupPage />} />
@@ -45,7 +46,7 @@ function AppContent() {
           />
           <Route
             path="/diagnosis"
-            element={admin ? <UsuariosAdmin /> : <LoginPage />}
+            element={admin ? <DiagnosisAdmin /> : <LoginPage />}
           />
           <Route path="*" element={<LoginPage />} />
         </Routes>

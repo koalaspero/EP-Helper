@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   createColumnHelper,
   flexRender,
@@ -14,7 +15,15 @@ import DebouncedInput from "./DebouncedInput";
 import AddUser from "./Add";
 import { apiBasUrl } from '../constants/formFields';
 import UserRegistrationModal from "./UserRegistrationModal";
-const UsuariosAdmin = () => {
+import review_2 from "../assets/review_2.svg";
+import upload from "../assets/upload.svg";
+import ViewResults from "./ViewResults";
+const DiagnosisAdmin = () => {
+  const users = [
+      { User: 'John Doe', Date: '2022-01-01', Parkinson: true, Probability: 0.8 },
+      { User: 'Jane Smith', Date: '2022-01-02', Parkinson: false, Probability: 0.2 },
+      // Add more user objects here
+  ];
   const [data, setData] = useState([]);
   const [rowSelected, setRowSelected] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -27,25 +36,25 @@ const UsuariosAdmin = () => {
   };
   const columnHelper= createColumnHelper();
     const columns = [
-    columnHelper.accessor("username", {
+    columnHelper.accessor("doctor", {
       cell: (info) => <span>{info.getValue()}</span>,
-      header: "Username",
+      header: "Doctor",
     }),
-    columnHelper.accessor("name", {
+    columnHelper.accessor("fecha", {
       cell: (info) => <span>{info.getValue()}</span>,
-      header: "Nombre",
+      header: "Fecha",
     }),
-    columnHelper.accessor("last_name", {
-      cell: (info) => <span>{info.getValue()}</span>,
-      header: "Apellido",
+    columnHelper.accessor("hasParkinson", {
+      cell: (info) => <span>{info.getValue()?"Si":"No"}</span>,
+      header: "Parkinson",
     }),
-    columnHelper.accessor("role", {
-      cell: (info) => <span>{info.getValue()===1 ? "Administrador" : "Doctor"}</span>,
-      header: "Rol",
+    columnHelper.accessor("probability", {
+      cell:(info) => <span>{info.getValue()}</span>,
+      header: "Probabilidad",
     }),
   ];
   const fetchUsers = async () => {
-    const respone = await fetch(apiBasUrl + "users", {
+    const respone = await fetch(apiBasUrl + "results", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -68,15 +77,23 @@ const UsuariosAdmin = () => {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
-  const editUser = (row) => {
-    row.original.rol = row.original.role == 1 ? "Admin" : "Doctor";
-    setRowSelected(row.original);
+  const downloadFile = (row) => {
+    //transformar archivo bob a file y descargar esta en row.original.result and rename the file to row.original.doctor
+    const file = new Blob([row.original.result], {type: 'text/plain'});
+    const fileURL = URL.createObjectURL(file);
+    const link = document.createElement('a');
+    link.href = fileURL;
+    link.download = row.original.doctor;
+    link.click();
+  }
+  const verDiagnostico = (row) => {
+    setRowSelected(row);
     handleShowModal();
   }
   return (
     <>
       <Header
-        heading="Resultados"
+        heading="Usuarios"
       />
       <div className="p-2 max-w-5xl mx-auto">
         <div className="flex justify-between mb-2">
@@ -88,7 +105,6 @@ const UsuariosAdmin = () => {
               className="p-2 bg-transparent outline-none border-b-2 w-1/4 focus:w-1/3 duration-300 border-principal"
               placeholder="Buscar en todas las columnas..."
             />
-            <AddUser data={data} fileName={"peoples"} />
           </div>
         </div>
         <div class="rounded">
@@ -104,8 +120,11 @@ const UsuariosAdmin = () => {
                       )}
                     </th>
                   ))}
-                  <th className="capitalize px-3.5 py-2 border border-slate-300">
-                      
+                    <th className="capitalize px-3.5 py-2 border border-slate-300 text-center">
+                      Descargar
+                    </th>
+                  <th className="capitalize px-3.5 py-2 border border-slate-300 text-center">
+                      Revisar
                     </th>
                 </tr>
               ))}
@@ -124,8 +143,14 @@ const UsuariosAdmin = () => {
                     ))}
                     <td className="text-center py-2 border  border-slate-300" >
                       <div class='has-tooltip'>
-                        <span class='tooltip rounded shadow-lg p-1 text-gray-100 bg-gray-800 -mt-9 -ml-12'>Editar Usuario</span>
-                        <PencilIcon onClick={() => editUser(row)} className="h-5 w-5 text-gray-500 hover:text-gray-700 cursor-pointer" />
+                        <span class='tooltip rounded shadow-lg p-1 text-gray-100 bg-gray-800 -mt-9 -ml-12'>Descargar archivo</span>
+                        <img src={upload} onClick={() => downloadFile(row)} className="h-5 w-5 text-gray-500 hover:text-gray-700 cursor-pointer mx-auto" />
+                      </div>
+                    </td>
+                    <td className="text-center py-2 border  border-slate-300" >
+                      <div class='has-tooltip'>
+                        <span class='tooltip rounded shadow-lg p-1 text-gray-100 bg-gray-800 -mt-9 -ml-12'>Ver diagnostico</span>
+                        <img src={review_2} onClick={() => verDiagnostico(row)} className="h-5 w-5 text-gray-500 hover:text-gray-700 cursor-pointer mx-auto" />
                       </div>
                     </td>
                   </tr>
@@ -133,7 +158,7 @@ const UsuariosAdmin = () => {
                 
               ) : (
                 <tr className="text-center h-32">
-                  <td colSpan={12}>No se encontró ningún registro</td>
+                  <td colSpan={12}>No se encontró ningún resultado</td>
                 </tr>
               )}
             </tbody>
@@ -194,9 +219,10 @@ const UsuariosAdmin = () => {
             </select>
           </div>
         </div>
-        <UserRegistrationModal show={showModal} onClose={handleCloseModal} row={rowSelected}/>
+        <ViewResults show={showModal} onClose={handleCloseModal} row_selected={rowSelected? rowSelected.original : rowSelected}/>
     </>
   );
 };
 
-export default UsuariosAdmin;
+export default DiagnosisAdmin;
+
