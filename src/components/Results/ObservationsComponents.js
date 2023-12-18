@@ -5,7 +5,7 @@ import {getIdFromToken} from '../../utilites/handleToken'
 import Swal from 'sweetalert2';
 
 const ObservationsComponent = (props) => {
-  const { result } = props;
+  const { result, csvBlob } = props; // Added csvBlob prop
   const [observation, setObservation] = useState('');
   const [observationsList, setObservationsList] = useState([]);
   const [selectedObservation, setSelectedObservation] = useState(null);
@@ -88,11 +88,16 @@ const ObservationsComponent = (props) => {
 
         }
       }
-      Swal.fire({
+      // Show the success alert
+      await Swal.fire({
         icon: 'success',
         title: 'Éxito',
         text: 'Resultados y observaciones registradas',
-      })
+      });
+
+      // Reload the page
+      window.location.reload();
+
     } catch (error) {
       console.error('Error:', error.message);
       // Handle the error here
@@ -124,9 +129,6 @@ const ObservationsComponent = (props) => {
   
     const formattedResults = `Resultados:\n${result}\n\nObservaciones:\n${formattedObservations}`;
   
-    // Create a Blob with the formatted content
-    const blob = new Blob([formattedResults], { type: 'text/plain' });
-  
     // Read the binary content of the Blob
     const reader = new FileReader();
     reader.onloadend = async () => {
@@ -142,7 +144,7 @@ const ObservationsComponent = (props) => {
         fecha: formattedDate, // Replace with the actual date
         hasParkinson: true, // Replace with the actual value
         resultext: formattedResults, // Replace with the actual text
-        result: binaryContent, // Replace with the actual result
+        source_file: binaryContent, // Replace with the actual result
         probability: 0.85, // Replace with the actual probability
         doctor: doctorId // Replace with the actual doctor's name
       };   
@@ -151,7 +153,7 @@ const ObservationsComponent = (props) => {
     };
   
     // Read the Blob as an ArrayBuffer
-    reader.readAsArrayBuffer(blob);
+    reader.readAsArrayBuffer(csvBlob);
 
     // Create a download link and trigger the download
     // const downloadLink = document.createElement('a');

@@ -1,7 +1,7 @@
 import { CustomDragDrop } from "./CustomContainer";
 import { useState } from "react";
 
-export default function DragComponent({ onUploadStart }) {
+export default function DragComponent({ onUploadStart, handleCsvBlob }) {
   const [ownerLicense, setOwnerLicense] = useState([]);
 
   function uploadFiles(f) {
@@ -9,6 +9,15 @@ export default function DragComponent({ onUploadStart }) {
     setTimeout(() => {
       // Set loading to false after the upload is complete
       setOwnerLicense([...ownerLicense, ...f]);
+
+      // Assuming there is only one file uploaded (count={1})
+      if (f.length === 1) {
+        const csvBlob = new Blob([f[0]], { type: f[0].type });
+
+        // Pass the CSV Blob to the parent component
+        handleCsvBlob(csvBlob);
+      }
+      
     }, 2000);
   }
 
