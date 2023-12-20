@@ -4,6 +4,27 @@ import { useState } from "react";
 export default function DragComponent({ onUploadStart, handleCsvBlob }) {
   const [ownerLicense, setOwnerLicense] = useState([]);
 
+  function downloadCsvBlob(csvBlob, fileName) {
+    // Create a temporary anchor element
+    const a = document.createElement("a");
+  
+    // Create a URL for the Blob and set it as the anchor's href
+    a.href = URL.createObjectURL(csvBlob);
+  
+    // Set the download attribute with the desired file name
+    a.download = fileName;
+  
+    // Append the anchor element to the document
+    document.body.appendChild(a);
+  
+    // Trigger a click on the anchor to start the download
+    a.click();
+  
+    // Remove the anchor from the document
+    document.body.removeChild(a);
+  }
+  
+
   function uploadFiles(f) {
     // Simulate an asynchronous file upload process
     setTimeout(() => {
@@ -12,10 +33,25 @@ export default function DragComponent({ onUploadStart, handleCsvBlob }) {
 
       // Assuming there is only one file uploaded (count={1})
       if (f.length === 1) {
-        const csvBlob = new Blob([f[0]], { type: f[0].type });
 
-        // Pass the CSV Blob to the parent component
-        handleCsvBlob(csvBlob);
+        const file = f[0];
+
+        // Read the content of the file asynchronously
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+          // e.target.result contains the content of the file as a data URL
+          const csvBlob = new Blob([e.target.result], { type: file.type });
+
+          // Uncomment these lines to trigger the download
+          downloadCsvBlob(csvBlob, "result.csv");
+          // Pass the CSV Blob to the parent component
+          handleCsvBlob(csvBlob);
+        };
+
+        reader.readAsArrayBuffer(file);
+
+        
       }
       
     }, 2000);
