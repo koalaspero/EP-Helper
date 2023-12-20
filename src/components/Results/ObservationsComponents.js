@@ -104,9 +104,12 @@ const ObservationsComponent = (props) => {
     }
   };
 
+  let formattedObservations = ""
+
   const saveResultsToFile = async () => {
     // Format the results and observations
-    const formattedObservations = observationsList
+    if(observationsList.length > 1){
+      formattedObservations = observationsList
       .map((obs) => {
         // Add a newline every 50 characters and a blank line before each observation
         const lines = [];
@@ -126,6 +129,10 @@ const ObservationsComponent = (props) => {
         return lines.join('\n') + '\n\n';
       })
       .join('');
+    }else{
+      formattedObservations = observationsList[0]
+    }
+    
   
     const formattedResults = `Resultados:\n${result}\n\nObservaciones:\n${formattedObservations}`;
   

@@ -4,25 +4,25 @@ import { useState } from "react";
 export default function DragComponent({ onUploadStart, handleCsvBlob }) {
   const [ownerLicense, setOwnerLicense] = useState([]);
 
-  function downloadCsvBlob(csvBlob, fileName) {
-    // Create a temporary anchor element
-    const a = document.createElement("a");
+  // function downloadCsvBlob(csvBlob, fileName) {
+  //   // Create a temporary anchor element
+  //   const a = document.createElement("a");
   
-    // Create a URL for the Blob and set it as the anchor's href
-    a.href = URL.createObjectURL(csvBlob);
+  //   // Create a URL for the Blob and set it as the anchor's href
+  //   a.href = URL.createObjectURL(csvBlob);
   
-    // Set the download attribute with the desired file name
-    a.download = fileName;
+  //   // Set the download attribute with the desired file name
+  //   a.download = fileName;
   
-    // Append the anchor element to the document
-    document.body.appendChild(a);
+  //   // Append the anchor element to the document
+  //   document.body.appendChild(a);
   
-    // Trigger a click on the anchor to start the download
-    a.click();
+  //   // Trigger a click on the anchor to start the download
+  //   a.click();
   
-    // Remove the anchor from the document
-    document.body.removeChild(a);
-  }
+  //   // Remove the anchor from the document
+  //   document.body.removeChild(a);
+  // }
   
 
   function uploadFiles(f) {
@@ -44,7 +44,7 @@ export default function DragComponent({ onUploadStart, handleCsvBlob }) {
           const csvBlob = new Blob([e.target.result], { type: file.type });
 
           // Uncomment these lines to trigger the download
-          downloadCsvBlob(csvBlob, "result.csv");
+          // downloadCsvBlob(csvBlob, "result.csv");
           // Pass the CSV Blob to the parent component
           handleCsvBlob(csvBlob);
         };
