@@ -68,14 +68,7 @@ export function CustomDragDrop({
 
     if (files && files.length) {
       const nFiles = files.map(async (file) => {
-        console.log(file)
-        const base64String = await convertFileBase64(file);
-        return {
-          name: file.name,
-          photo: base64String,
-          type: file.type,
-          size: file.size
-        };
+        return file;
       });
 
       Promise.all(nFiles).then((newFiles) => {
@@ -204,7 +197,7 @@ export function CustomDragDrop({
                 <div className="w-[70%] flex justify-start items-center space-x-2">
                   <div
                     className="text-[#5E62FF] text-[37px] cursor-pointer"  
-                    onClick={() => showImage(img.photo)}
+                    // onClick={() => showImage(img.photo)}
                   >
                     {img.type.match(/image.*/i) ? (
                       <FaRegFileImage />
