@@ -78,14 +78,24 @@ const DiagnosisAdmin = () => {
     getPaginationRowModel: getPaginationRowModel(),
   });
   const downloadFile = (row) => {
-    //transformar archivo bob a file y descargar esta en row.original.result and rename the file to row.original.doctor
-    const file = new Blob([row.original.result], {type: 'text/plain'});
+    // Decodificar el archivo BLOB en base64
+    const base64Data = atob(row.original.source_file);
+    const byteNumbers = new Array(base64Data.length);
+    for (let i = 0; i < base64Data.length; i++) {
+      byteNumbers[i] = base64Data.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+
+    // Crear un Blob a partir de los datos decodificados
+    const file = new Blob([byteArray], { type: 'text/csv' });
+
+    // Crear una URL para el Blob y descargar el archivo
     const fileURL = URL.createObjectURL(file);
     const link = document.createElement('a');
     link.href = fileURL;
     link.download = row.original.doctor;
     link.click();
-  }
+  };
   const verDiagnostico = (row) => {
     setRowSelected(row);
     handleShowModal();
