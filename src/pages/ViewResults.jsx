@@ -18,7 +18,7 @@ const ViewResults = ({ show, onClose,row_selected }) => {
     <div className={`fixed inset-0 flex items-center justify-center z-50 ${show ? '' : 'hidden'}`}>
       <div className="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
 
-      <div className="modal-container bg-white w-full md:max-w-3xl mx-auto rounded-lg shadow-lg z-50 overflow-y-auto h-1/2">
+      <div className="modal-container bg-white w-full md:max-w-3xl mx-auto rounded-lg shadow-lg z-50 overflow-y-auto">
         <div className="modal-header flex justify-between items-center p-2">
           <h2 className="text-2xl font-bold mx-auto">Ver Diagnostico</h2>
           <button onClick={onClose} className="text-gray-700 text-2xl hover:text-gray-900">
@@ -65,7 +65,19 @@ const ViewResults = ({ show, onClose,row_selected }) => {
                 </div>
               </div>
               <div className="py-2">
-                <div className="flex items-center pb-2">
+                <div className="flex items-center  pb-2">
+                  <label className="text-sm font-semibold px-1">Ruta de archivo:</label> {/* Añadido espacio horizontal px-1 */}
+                  <input
+                    value={row && row.source_file}
+                    className="appearance-none bg-transparent border-b border-teal-500 w-full text-gray-700 py-1 px-2 leading-tight focus:outline-none"
+                    type="text"
+                    placeholder="Jane Doe"
+                    aria-label="Nombre completo"
+                  />
+                </div>
+              </div>
+              <div className="py-2">
+                <div className="flex items-center pb-4">
                   <label className="text-sm font-semibold px-1">Parkinson:</label> {/* Añadido espacio horizontal px-1 */}
                   <input
                     type="checkbox"
@@ -76,7 +88,8 @@ const ViewResults = ({ show, onClose,row_selected }) => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col space-y-2 mx-auto items-center content-center w-1/2">
+            
+            <div className="flex flex-col space-y-2 mx-auto items-center content-center w-1/2 pb-2">
                 <label className="text-xl font-bold mx-auto content-center">Observación:</label>
                 <textarea
                     type="text"
