@@ -2,17 +2,19 @@ import React, { useEffect } from 'react';
 import { useState } from 'react';
 const ViewResults = ({ show, onClose,row_selected }) => {
   const [row,setRow]= useState()
+  const [message, setMessage] = useState("");
   useEffect(() => {
     console.log(row_selected)
     //transform row_selected.observación a string con viñeta de cada elemento
     if(row_selected){
       let observation = ''
+      console.log(row_selected.observation)
       for (let i = 0; i < row_selected.observation.length; i++) {
         observation += '•'+ row_selected.observation[i] + '\n'
       }
-      row_selected.observation = observation
+      setMessage(observation)
     }
-     setRow(row_selected)
+    setRow(row_selected)
   },[row_selected]);
   return (
     <div className={`fixed inset-0 flex items-center justify-center z-50 ${show ? '' : 'hidden'}`}>
@@ -95,7 +97,7 @@ const ViewResults = ({ show, onClose,row_selected }) => {
                     type="text"
                     readOnly
                     className="w-full p-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300 h-full align-top"
-                    value={row && row.observation}
+                    value={message}
                 />
             </div>
           </div>

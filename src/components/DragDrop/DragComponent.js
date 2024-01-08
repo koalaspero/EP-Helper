@@ -41,12 +41,15 @@ export default function DragComponent({ onUploadStart, handleCsvBlob }) {
 
         reader.onload = function (e) {
           // e.target.result contains the content of the file as a data URL
-          const csvBlob = new Blob([e.target.result], { type: file.type });
+          console.log(e.target.result);
+          //extract the extension of the file
+          let extension=file.name.split(".").pop();
+          const csvBlob = new Blob([e.target.result], { type: file.type});
 
           // Uncomment these lines to trigger the download
           // downloadCsvBlob(csvBlob, "result.csv");
           // Pass the CSV Blob to the parent component
-          handleCsvBlob(csvBlob);
+          handleCsvBlob(csvBlob, extension);
         };
 
         reader.readAsArrayBuffer(file);
@@ -74,7 +77,7 @@ export default function DragComponent({ onUploadStart, handleCsvBlob }) {
         onUpload={uploadFiles}
         onDelete={deleteFile}
         count={1}
-        formats={["csv"]}
+        formats={["mat"]}
         onUploadStart={onUploadStart}
       />
     </div>

@@ -5,7 +5,7 @@ import {getIdFromToken} from '../../utilites/handleToken'
 import Swal from 'sweetalert2';
 
 const ObservationsComponent = (props) => {
-  const { result, csvBlob } = props; // Added csvBlob prop
+  const { result, csvBlob,probability,extension } = props; // Added csvBlob prop
   const [observation, setObservation] = useState('');
   const [observationsList, setObservationsList] = useState([]);
   const [selectedObservation, setSelectedObservation] = useState(null);
@@ -141,32 +141,31 @@ const ObservationsComponent = (props) => {
     reader.onloadend = async () => {
       // Now 'reader.result' contains the binary content of the file
       const binaryContent = new Uint8Array(reader.result);
+      console.log('binaryContent:', binaryContent);
 
       const today = new Date();
       const formattedDate = today.toISOString().split('T')[0]; // Format as YYYY-MM-D
 
       const doctorId = getIdFromToken()
-
+      let hasParkinson = false
+      if(probability.result == 0){
+        hasParkinson = false
+      }
       const resultData = {
         fecha: formattedDate, // Replace with the actual date
-        hasParkinson: true, // Replace with the actual value
+        hasParkinson: hasParkinson, // Replace with the actual value
         resultext: formattedResults, // Replace with the actual text
         source_file: binaryContent, // Replace with the actual result
-        probability: 0.85, // Replace with the actual probability
-        doctor: doctorId // Replace with the actual doctor's name
+        probability: probability.probability, // Replace with the actual probability
+        doctor: doctorId, // Replace with the actual doctor's name
+        extension: extension,
       };   
       
       await postResult(resultData)     
     };
-  
+    console.log('csvBlob:', csvBlob);
     // Read the Blob as an ArrayBuffer
     reader.readAsArrayBuffer(csvBlob);
-
-    // Create a download link and trigger the download
-    // const downloadLink = document.createElement('a');
-    // downloadLink.href = URL.createObjectURL(blob);
-    // downloadLink.download = 'results_and_observations.txt';
-    // downloadLink.click();
   };
   
 
