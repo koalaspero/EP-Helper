@@ -19,11 +19,6 @@ import review_2 from "../assets/review_2.svg";
 import upload from "../assets/upload.svg";
 import ViewResults from "./ViewResults";
 const DiagnosisAdmin = () => {
-  const users = [
-      { User: 'John Doe', Date: '2022-01-01', Parkinson: true, Probability: 0.8 },
-      { User: 'Jane Smith', Date: '2022-01-02', Parkinson: false, Probability: 0.2 },
-      // Add more user objects here
-  ];
   const [data, setData] = useState([]);
   const [rowSelected, setRowSelected] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -77,25 +72,6 @@ const DiagnosisAdmin = () => {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
-  const downloadFile = (row) => {
-    // Decodificar el archivo BLOB en base64
-    const base64Data = atob(row.original.source_file);
-    const byteNumbers = new Array(base64Data.length);
-    for (let i = 0; i < base64Data.length; i++) {
-      byteNumbers[i] = base64Data.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-
-    // Crear un Blob a partir de los datos decodificados
-    const file = new Blob([byteArray], { type: 'text/csv' });
-
-    // Crear una URL para el Blob y descargar el archivo
-    const fileURL = URL.createObjectURL(file);
-    const link = document.createElement('a');
-    link.href = fileURL;
-    link.download = row.original.doctor;
-    link.click();
-  };
   const verDiagnostico = (row) => {
     setRowSelected(row);
     handleShowModal();
@@ -103,7 +79,7 @@ const DiagnosisAdmin = () => {
   return (
     <>
       <Header
-        heading="Usuarios"
+        heading="Diagnósticos"
       />
       <div className="p-2 max-w-5xl mx-auto">
         <div className="flex justify-between mb-2">
@@ -130,9 +106,6 @@ const DiagnosisAdmin = () => {
                       )}
                     </th>
                   ))}
-                    <th className="capitalize px-3.5 py-2 border border-slate-300 text-center">
-                      Descargar
-                    </th>
                   <th className="capitalize px-3.5 py-2 border border-slate-300 text-center">
                       Revisar
                     </th>
@@ -153,14 +126,8 @@ const DiagnosisAdmin = () => {
                     ))}
                     <td className="text-center py-2 border  border-slate-300" >
                       <div class='has-tooltip'>
-                        <span class='tooltip rounded shadow-lg p-1 text-gray-100 bg-gray-800 -mt-9 -ml-12'>Descargar archivo</span>
-                        <img src={upload} onClick={() => downloadFile(row)} className="h-5 w-5 text-gray-500 hover:text-gray-700 cursor-pointer mx-auto" />
-                      </div>
-                    </td>
-                    <td className="text-center py-2 border  border-slate-300" >
-                      <div class='has-tooltip'>
-                        <span class='tooltip rounded shadow-lg p-1 text-gray-100 bg-gray-800 -mt-9 -ml-12'>Ver diagnostico</span>
-                        <img src={review_2} onClick={() => verDiagnostico(row)} className="h-5 w-5 text-gray-500 hover:text-gray-700 cursor-pointer mx-auto" />
+                        <span class='tooltip rounded shadow-lg p-1 text-gray-100 bg-gray-800 -mt-9 -ml-15'>Ver diagnostico</span>
+                        <img src={review_2} onClick={() => verDiagnostico(row)} className=" h-4 w-4 text-gray-500 hover:text-gray-700 cursor-pointer mx-auto" />
                       </div>
                     </td>
                   </tr>

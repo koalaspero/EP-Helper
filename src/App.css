@@ -46,48 +46,78 @@
 }
 
 
-
 .table_background {
   display: flex;
   background-color: white;
-  margin-left: 3vw;
-  margin-right: 3vw;
-  margin-bottom: 10vh;
-  margin-top: 5vh;
-  box-shadow: 0px 0px 10px rgba(114, 114, 113, 0.5);
+  margin: 5vh 3vw 10vh;
+  box-shadow: 0px 0px 8px rgba(114, 114, 113, 0.3);
   border-radius: 15px;
 }
 
 table {
-  font-family: futura-pt, sans-serif;
-  font-weight: 400;
-  font-style: normal;
+  font-family: 'futura-pt', sans-serif;
   border-collapse: collapse;
   width: 100%;
-  border-radius: 15px;
+  overflow: hidden;
+  /* Si quieres que la tabla respete el border-radius */
+}
 
-  /* add this */
-  overflow: hidden
+th,
+td {
+  text-align: left;
+  padding: 15px;
+  /* Uniforme para th y td */
+}
+
+tr:nth-child(odd) {
+  background-color: #ffffff;
+  /* Color claro para filas impares */
+}
+
+tr:nth-child(even) {
+  background-color: #f7f7f7;
+  /* Color ligeramente diferente para filas pares */
 }
 
 th {
+  background-color: #333333;
+  /* Color más oscuro para mayor contraste */
+  color: white;
   font-size: 18px;
-  text-align: left;
-  padding: 20px 20px 20px 20px;
 }
 
-table,
-td {
-  padding: 8px 8px 8px 20px;
+.icono-accion {
+  cursor: pointer;
+  transition: color 0.3s ease;
+  /* Transición suave para el cambio de color */
 }
 
-tr {
-  background-color: #eff2f5;
-}
-th{
-  background-color: #B9B9B9;
+.icono-accion:hover {
+  color: #4CAF50;
+  /* Cambio de color al pasar el cursor */
 }
 
-.data:hover {
-  background-color: rgba(114, 114, 113, 0.2);
+/* Añadir estilos para focus y active */
+.icono-accion:focus,
+.icono-accion:active {
+  outline: none;
+  /* Remueve el outline predeterminado */
+  box-shadow: 0 0 0 2px #4CAF50;
+  /* Añade un box-shadow para indicar foco */
+}
+
+@media screen and (max-width: 600px) {
+  .tabla-responsiva {
+    display: block;
+    overflow-x: auto;
+  }
+
+  th,
+  td {
+    padding: 10px;
+    /* Padding más pequeño para pantallas pequeñas */
+  }
+}
+.-ml-15{
+  margin-left: -3.5rem;
 }

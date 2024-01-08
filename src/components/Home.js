@@ -2,28 +2,51 @@ import { useState } from "react";
 import DragComponent from "./DragDrop/DragComponent";
 import LoadingComponent from "./Loading/LoadingComponent";
 import ResultComponent from "./Results/ResultComponent";
+import { apiBasUrl } from "../constants/formFields";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
   const [csvBlob, setCsvBlob] = useState(null);
+  const [result, setResult] = useState(null);
+  const [extension, setExtension] = useState(null);
 
-  const handleCsvBlob = (blob) => {
+  const handleCsvBlob = (blob,extension) => {
     // Handle the CSV Blob as needed
     setCsvBlob(blob);
+    setExtension(extension);
   };
 
+  const obtainResults = async(data) => {
+    const response = await fetch(apiBasUrl + "getResults", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const json = await response.json();
+    console.log(json);
+    setResult(json);
+  }
 
   const handleFileUpload = () => {
-    // Set loading to true before starting the file upload process
     setIsLoading(true);
-
-    // Simulate an asynchronous file upload process
-    setTimeout(() => {
-      // Set loading to false after the upload is complete
+    setIsFinished(false);
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const binaryContent = new Uint8Array(reader.result);
+      //get the extension of the file name
+      const resultData = {
+        source_file: binaryContent,
+        extension: extension,
+      };
+      await obtainResults(resultData);
       setIsLoading(false);
       setIsFinished(true);
-    }, 2000);
+    };
+    console.log("File uploaded");
+    reader.readAsArrayBuffer(csvBlob);
   };
 
   return (
@@ -36,7 +59,7 @@ export default function Home() {
         <div className="flex justify-center">
           {isLoading && <LoadingComponent />}
         </div>
-        {isFinished && <ResultComponent csvBlob={csvBlob} />}
+        {isFinished && <ResultComponent csvBlob={csvBlob} result={result} extension={extension}/>}
       </div>
     </div>
   );

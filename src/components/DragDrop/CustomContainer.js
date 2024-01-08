@@ -35,7 +35,7 @@ export function CustomDragDrop({
       return (
         formats.includes(fileType) ||
         formats.includes(fileExtension) ||
-        (fileType === "application/vnd.ms-excel" && formats.includes("csv"))
+        (formats.includes("mat"))
       );
     });
 
@@ -169,7 +169,7 @@ export function CustomDragDrop({
               className="opacity-0 hidden"
               type="file"
               multiple
-              accept=" .csv, text/csv"
+              accept=".mat,.svc"
               ref={fileRef}
               onChange={(e) => handleDrop(e, "inputFile")}
             />
@@ -184,7 +184,7 @@ export function CustomDragDrop({
             o arrastra y suelta
           </div>
           <div className="text-[10px] font-normal text-gray-500">
-            Solo un archivo en formato CSV
+            Solo un archivo en formato MAT o SVC
           </div>
         </div>
       </div>

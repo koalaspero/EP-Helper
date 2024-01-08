@@ -76,7 +76,7 @@ const UsuariosAdmin = () => {
   return (
     <>
       <Header
-        heading="Resultados"
+        heading="Usuarios"
       />
       <div className="p-2 max-w-5xl mx-auto">
         <div className="flex justify-between mb-2">
