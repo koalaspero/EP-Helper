@@ -15,6 +15,7 @@ export default function AdminPrincipalPage() {
     <>
       <Header
         heading="Inicio"
+        isHome={true}
         // paragraph="Don't have an account yet? "
         // linkName="Signup"
         // linkUrl="/signup"

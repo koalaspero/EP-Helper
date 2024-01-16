@@ -5,11 +5,12 @@ import LoginPage from './pages/Login';
 import HomePage from './pages/Home';
 
 import AdminPrincipalPage from "./pages/AdminPrincipal";
-import UsuariosAdmin from "./pages/UsuariosAdmin";
+import UsuariosAdmin from "./pages/admin_user/UsuariosAdmin";
 import { isDoctor, isAdmin } from './utilites/handleToken';
 import { useEffect, useState } from 'react';
-import DiagnosisAdmin from './pages/DiagnosisAdmin';
+import DiagnosisAdmin from './pages/admin_diagnosis/DiagnosisAdmin';
 function App() {
+
   return (
     <BrowserRouter>
       <AppContent />

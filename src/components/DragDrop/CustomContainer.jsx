@@ -12,14 +12,14 @@ export function CustomDragDrop({
   formats,
   onUploadStart 
 }) {
-  const [buttonPressed, setButtonPressed] = useState(true);
   const dropContainer = useRef(null);
   const [dragging, setDragging] = useState(false);
   const fileRef = useRef(null);
 
   function handleDrop(e, type) {
     let files;
-    if (type === "inputFile") {
+    // eslint-disable-next-line
+    if (type == "inputFile") {
       files = [...e.target.files];
     } else {
       e.preventDefault();
@@ -81,19 +81,6 @@ export function CustomDragDrop({
     }
   }
 
-  async function convertFileBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        resolve(reader.result);
-      };
-      reader.onerror = (error) => {
-        reject(error);
-      };
-    });
-  }
-
   useEffect(() => {
     function handleDragOver(e) {
       e.preventDefault();
@@ -138,15 +125,6 @@ export function CustomDragDrop({
       showConfirmButton: false,
       width: 500,
       timer: 1500
-    });
-  }
-
-  function showImage(image) {
-    Swal.fire({
-      imageUrl: image,
-      showCloseButton: true,
-      showConfirmButton: false,
-      width: 450
     });
   }
 

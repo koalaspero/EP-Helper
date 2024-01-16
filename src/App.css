@@ -121,3 +121,17 @@ th {
 .-ml-15{
   margin-left: -3.5rem;
 }
+.rotated-chart {
+  transform: scaleY(-1);
+  position: relative;
+  left: 30%;
+  /* Mueve el gráfico a la mitad del contenedor padre */
+  top: 0px;
+  /* Ajusta si es necesario para el centrado vertical */
+  display: inline-block;
+  /* Esto asegura que la rotación se aplique solo al gráfico */
+}
+.subida{
+  overflow: hidden;
+  max-height: 40rem;
+}

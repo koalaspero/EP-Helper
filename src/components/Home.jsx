@@ -26,7 +26,6 @@ export default function Home() {
       body: JSON.stringify(data),
     });
     const json = await response.json();
-    console.log(json);
     setResult(json);
   }
 
@@ -45,7 +44,6 @@ export default function Home() {
       setIsLoading(false);
       setIsFinished(true);
     };
-    console.log("File uploaded");
     reader.readAsArrayBuffer(csvBlob);
   };
 
