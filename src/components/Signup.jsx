@@ -67,19 +67,30 @@ export default function Signup(){
           throw new Error(response.statusText);
       }
 
+
       Swal.fire({
           icon: 'success',
           title: 'Bienvenido',
           text: 'Cuenta creada con éxito',
       }).then(async () => {
         const responseData = await response.json();
-        // Save the access token to the local storage
-        saveToken(responseData.access_token);
-        let rol = getRoleFromToken(responseData.access_token);
-        if (rol === 1) {
-          navigate("/admin");
-        }else{
-          navigate("/home");
+        if (responseData.error) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: responseData.error,
+          });
+          return;
+        }
+        else{
+          saveToken(responseData.access_token);
+          let rol = getRoleFromToken(responseData.access_token);
+          // eslint-disable-next-line
+          if (rol == 1) {
+            navigate("/admin");
+          }else{
+            navigate("/home");
+          }
         }
       });
   } catch (error) {

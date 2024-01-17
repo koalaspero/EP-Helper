@@ -4,11 +4,9 @@ const ViewResults = ({ show, onClose,row_selected }) => {
   const [row,setRow]= useState()
   const [message, setMessage] = useState("");
   useEffect(() => {
-    console.log(row_selected)
     //transform row_selected.observación a string con viñeta de cada elemento
     if(row_selected){
       let observation = ''
-      console.log(row_selected.observation)
       for (let i = 0; i < row_selected.observation.length; i++) {
         observation += '•'+ row_selected.observation[i] + '\n'
       }

@@ -4,11 +4,12 @@ import * as Yup from 'yup';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
-import { apiBasUrl } from '../constants/formFields';
+import { apiBasUrl } from '../../constants/formFields';
 const UserRegistrationModal = ({ show, onClose,row }) => {
   const [initialValues,setInitialValues]= useState({})
   const [validationSchema,setValidationSchema]= useState({})
   useEffect(() => {
+    // eslint-disable-next-line
       if(row == null){
        setInitialValues({
         id:-1,
@@ -23,7 +24,7 @@ const UserRegistrationModal = ({ show, onClose,row }) => {
         username: Yup.string().required('Campo requerido'),
         name: Yup.string().required('Campo requerido'),
         last_name: Yup.string().required('Campo requerido'),
-        rol: Yup.string().required('Campo requerido'),
+        rol: Yup.number().required('Campo requerido').oneOf([1, 2], 'Rol inválido'),
         password: Yup.string()
           .required('Campo requerido')
           .min(8, 'Mínimo 8 caracteres')
@@ -81,6 +82,10 @@ const UserRegistrationModal = ({ show, onClose,row }) => {
         window.location.reload();
       })
     }catch(error){
+      console.log(error.message)
+      console.log(error["error"])
+      //how to get the code of the error
+
       if(error.message == 409){
         Swal.fire({
           title: 'Error!',
@@ -140,7 +145,7 @@ const UserRegistrationModal = ({ show, onClose,row }) => {
                 <label htmlFor="rol" className="block text-gray-700 font-bold mb-2">
                   Rol
                 </label>
-                <Field as="select" name="rol"  className="border rounded w-full py-2 px-3">
+                <Field as="select" name="rol" className="border rounded w-full py-2 px-3 bg-white text-black appearance-none">
                   <option value="">Seleccione un rol</option>
                   <option value={1}>Admin</option>
                   <option value={2}>Doctor</option>
@@ -197,7 +202,7 @@ const UserRegistrationModal = ({ show, onClose,row }) => {
                   type="submit"
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded float-right"
                 >
-                  Registrarse
+                  {row == null ? "Registrar" : "Editar"}
                 </button>
               </div>
               

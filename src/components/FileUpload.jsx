@@ -8,10 +8,10 @@ const FileUpload = () => {
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: (acceptedFiles) => {
       // Filter only CSV files
-      const csvFiles = acceptedFiles.filter(file => file.type === 'text/csv' || file.name.endsWith('.csv'));
+      const csvFiles = acceptedFiles.filter(file => file.name.endsWith('.scv')|| file.name.endsWith('.mat'));
       setUploadedFiles(csvFiles);
     },
-    accept: '.csv', // Limit accepted file types to CSV
+    accept: ['.mat','.svc'], // Limit accepted file types to CSV
   });
 
   return (

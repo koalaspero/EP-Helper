@@ -10,7 +10,6 @@ const ObservationsComponent = (props) => {
   const [observationsList, setObservationsList] = useState([]);
   const [selectedObservation, setSelectedObservation] = useState(null);
   const [isObservationsCollapsed, setIsObservationsCollapsed] = useState(false);
-
   const handleChange = (e) => {
     // Limit the input to 500 characters
     if (e.target.value.length <= 500) {
@@ -47,10 +46,7 @@ const ObservationsComponent = (props) => {
         return;
       }
   
-      const res = await response.json();
-      console.log('Result:', res);
-
-      // Handle the successful response here
+      await response.json();
     } catch (error) {
       console.error('Error:', error.message);
       // Handle the error here
@@ -74,7 +70,6 @@ const ObservationsComponent = (props) => {
       }
   
       const result = await response.json();
-      console.log('Result:', result);
 
       if(observationsList.length > 0){
         for (let i = 0; i < observationsList.length; i++) {
@@ -141,13 +136,13 @@ const ObservationsComponent = (props) => {
     reader.onloadend = async () => {
       // Now 'reader.result' contains the binary content of the file
       const binaryContent = new Uint8Array(reader.result);
-      console.log('binaryContent:', binaryContent);
 
       const today = new Date();
       const formattedDate = today.toISOString().split('T')[0]; // Format as YYYY-MM-D
 
       const doctorId = getIdFromToken()
       let hasParkinson = false
+      // eslint-disable-next-line
       if(probability.result == 0){
         hasParkinson = false
       }
@@ -163,7 +158,6 @@ const ObservationsComponent = (props) => {
       
       await postResult(resultData)     
     };
-    console.log('csvBlob:', csvBlob);
     // Read the Blob as an ArrayBuffer
     reader.readAsArrayBuffer(csvBlob);
   };

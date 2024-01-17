@@ -3,7 +3,6 @@ import jwtDecode from 'jwt-decode';
 
 const getRoleFromToken = (token) => {
     const decodedToken = jwtDecode(token);
-    console.log(decodedToken)
     const rol = decodedToken.rol;
     return rol;
 };
@@ -49,7 +48,7 @@ const isAdmin = () => {
     const token = localStorage.getItem('token');
     if(token){
         const decodedToken = jwtDecode(token);
-        return decodedToken.rol === 1;
+        return decodedToken.rol == 1;
     }
     return false;
 }
@@ -57,7 +56,8 @@ const isDoctor=()=>{
     const token = localStorage.getItem('token');
     if(token){
         const decodedToken = jwtDecode(token);
-        return decodedToken.rol === 2;
+        // eslint-disable-next-line
+        return decodedToken.rol == 2;
     }
     return false;
 }

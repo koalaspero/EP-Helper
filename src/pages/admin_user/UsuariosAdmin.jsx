@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   createColumnHelper,
   flexRender,
@@ -8,17 +7,14 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { PencilIcon } from "@heroicons/react/24/solid";
-import { useEffect, useMemo, useState } from "react";
-import Header from "../components/Header";
-import { SearchIcon } from "../icons/Icons";
-import DebouncedInput from "./DebouncedInput";
+import { useEffect, useState } from "react";
+import Header from "../../components/Header";
+import { SearchIcon } from "../../icons/Icons";
+import DebouncedInput from "../DebouncedInput";
 import AddUser from "./Add";
-import { apiBasUrl } from '../constants/formFields';
+import { apiBasUrl } from '../../constants/formFields';
 import UserRegistrationModal from "./UserRegistrationModal";
-import review_2 from "../assets/review_2.svg";
-import upload from "../assets/upload.svg";
-import ViewResults from "./ViewResults";
-const DiagnosisAdmin = () => {
+const UsuariosAdmin = () => {
   const [data, setData] = useState([]);
   const [rowSelected, setRowSelected] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -31,25 +27,25 @@ const DiagnosisAdmin = () => {
   };
   const columnHelper= createColumnHelper();
     const columns = [
-    columnHelper.accessor("doctor", {
+    columnHelper.accessor("username", {
       cell: (info) => <span>{info.getValue()}</span>,
-      header: "Doctor",
+      header: "Username",
     }),
-    columnHelper.accessor("fecha", {
+    columnHelper.accessor("name", {
       cell: (info) => <span>{info.getValue()}</span>,
-      header: "Fecha",
+      header: "Nombre",
     }),
-    columnHelper.accessor("hasParkinson", {
-      cell: (info) => <span>{info.getValue()?"Si":"No"}</span>,
-      header: "Parkinson",
+    columnHelper.accessor("last_name", {
+      cell: (info) => <span>{info.getValue()}</span>,
+      header: "Apellido",
     }),
-    columnHelper.accessor("probability", {
-      cell:(info) => <span>{info.getValue()}</span>,
-      header: "Probabilidad",
+    columnHelper.accessor("role", {
+      cell: (info) => <span>{info.getValue()==1 ? "Administrador" : "Doctor"}</span>,
+      header: "Rol",
     }),
   ];
   const fetchUsers = async () => {
-    const respone = await fetch(apiBasUrl + "results", {
+    const respone = await fetch(apiBasUrl + "users", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -72,14 +68,17 @@ const DiagnosisAdmin = () => {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
-  const verDiagnostico = (row) => {
-    setRowSelected(row);
+  const editUser = (row) => {
+    // eslint-disable-next-line
+    row.original.rol = row.original.role == 1 ? "Admin" : "Doctor";
+    setRowSelected(row.original);
     handleShowModal();
   }
   return (
     <>
       <Header
-        heading="Diagnósticos"
+        heading="Usuarios"
+        isHome={true}
       />
       <div className="p-2 max-w-5xl mx-auto">
         <div className="flex justify-between mb-2">
@@ -91,6 +90,7 @@ const DiagnosisAdmin = () => {
               className="p-2 bg-transparent outline-none border-b-2 w-1/4 focus:w-1/3 duration-300 border-principal"
               placeholder="Buscar en todas las columnas..."
             />
+            <AddUser data={data} fileName={"peoples"} />
           </div>
         </div>
         <div class="rounded">
@@ -106,8 +106,8 @@ const DiagnosisAdmin = () => {
                       )}
                     </th>
                   ))}
-                  <th className="capitalize px-3.5 py-2 border border-slate-300 text-center">
-                      Revisar
+                  <th className="capitalize px-3.5 py-2 border border-slate-300">
+                      
                     </th>
                 </tr>
               ))}
@@ -126,8 +126,8 @@ const DiagnosisAdmin = () => {
                     ))}
                     <td className="text-center py-2 border  border-slate-300" >
                       <div class='has-tooltip'>
-                        <span class='tooltip rounded shadow-lg p-1 text-gray-100 bg-gray-800 -mt-9 -ml-15'>Ver diagnostico</span>
-                        <img src={review_2} onClick={() => verDiagnostico(row)} className=" h-4 w-4 text-gray-500 hover:text-gray-700 cursor-pointer mx-auto" />
+                        <span class='tooltip rounded shadow-lg p-1 text-gray-100 bg-gray-800 -mt-9 -ml-12'>Editar Usuario</span>
+                        <PencilIcon onClick={() => editUser(row)} className="h-5 w-5 text-gray-500 hover:text-gray-700 cursor-pointer" />
                       </div>
                     </td>
                   </tr>
@@ -135,7 +135,7 @@ const DiagnosisAdmin = () => {
                 
               ) : (
                 <tr className="text-center h-32">
-                  <td colSpan={12}>No se encontró ningún resultado</td>
+                  <td colSpan={12}>No se encontró ningún registro</td>
                 </tr>
               )}
             </tbody>
@@ -181,25 +181,11 @@ const DiagnosisAdmin = () => {
                 className="border p-1 rounded w-16 bg-transparent"
               />
             </span>
-            <select
-              value={table.getState().pagination.pageSize}
-              onChange={(e) => {
-                table.setPageSize(Number(e.target.value));
-              }}
-              className="p-2 bg-transparent"
-            >
-              {[10, 20, 30, 50].map((pageSize) => (
-                <option key={pageSize} value={pageSize}>
-                  Show {pageSize}
-                </option>
-              ))}
-            </select>
           </div>
         </div>
-        <ViewResults show={showModal} onClose={handleCloseModal} row_selected={rowSelected? rowSelected.original : rowSelected}/>
+        <UserRegistrationModal show={showModal} onClose={handleCloseModal} row={rowSelected} />
     </>
   );
 };
 
-export default DiagnosisAdmin;
-
+export default UsuariosAdmin;

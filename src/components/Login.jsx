@@ -54,14 +54,16 @@ export default function Login(){
             // Save the access token to the local storage
             saveToken(responseData.access_token);
             let rol = getRoleFromToken(responseData.access_token);
-            if (rol === 1) {
+            // eslint-disable-next-line
+            if (rol == 1) {
               navigate("/admin");
             }else{
               navigate("/home");
             }
           });
       } catch (error) {
-        if (error.message === "Unauthorized") {
+        // eslint-disable-next-line
+        if (error.message == "Unauthorized") {
           Swal.fire({
               icon: 'error',
               title: 'Oops...',
